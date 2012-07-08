@@ -1,0 +1,5 @@
+To install, just run:
+python ./setup.py build
+python ./setup.py install
+
+See test_redef.py under your install path for examples.
