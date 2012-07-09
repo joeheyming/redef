@@ -97,24 +97,25 @@ def redef(obj, key, value):
     return Redef(obj, key, value)
 
 class WriteCapturer:
-    def __init__(self, func, args):
+    def __init__(self, func, *args, **kwargs):
         self.output = ''
         self.func = func
         self.args = args
+        self.kwargs = kwargs
     def capture(self):
-        self.returned = self.func(self.args)
+        self.returned = self.func(*self.args, **self.kwargs)
     def write(self, *args):
         self.output = self.output + ' '.join([str(x) for x in args])
 
-def capture_output_(func, args, output_type):
+def capture_output_(output_type, func, *args, **kwargs):
     import sys
-    writer = WriteCapturer(func, args)
+    writer = WriteCapturer(func, *args, **kwargs)
     rd_write = redef(sys, output_type, writer)
     writer.capture()
     return writer
 
-def stdout_of(func, args):
-    return capture_output_(func, args, 'stdout')
+def stdout_of(func, *args, **kwargs):
+    return capture_output_('stdout', func, *args, **kwargs)
 
-def stderr_of(func, args):
-    return capture_output_(func, args, 'stderr')
+def stderr_of(func, *args, **kwargs):
+    return capture_output_('stderr', func, *args, **kwargs)

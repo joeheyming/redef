@@ -93,10 +93,10 @@ class RedefTest(unittest.TestCase):
         class Pirate:
             drunk = 0
             def attack(self):
-                print 'arrr!'
+                print('arrr!')
 
             def hoard(self, booty):
-                print 'yarrr, don\'t touch me %s' % booty
+                print('yarrr, don\'t touch me %s' % booty)
 
             def plunder(self, booty):
                 self.attack()
@@ -106,7 +106,7 @@ class RedefTest(unittest.TestCase):
                 return 'punch'
 
             def drink(self):
-                print 'burp!'
+                print('burp!')
                 self.drunk = self.drunk + 1
 
         blackbeard = Pirate()
