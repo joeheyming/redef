@@ -75,6 +75,12 @@ There are other useful functions provided on the redef object itself:
 * `redef(obj, key, value)`:
     Static constructor of a `Redef` object
 
+Where
+  * `obj`: is a Class, Module, or Object you want to temporariliy change
+  * `key`: The string name of the attribute you want to change
+  * `value`: The new value.  If the value is None, you only capture called, method_args, and named_method_args
+   * The None case won't redefine the key on the obj
+
 These static functions were provided to show the usefulness of redef: 
 For example, you could capture stdout of a function call, and after capturing it,
 `sys.stdout` goes back to normal:
@@ -82,6 +88,7 @@ For example, you could capture stdout of a function call, and after capturing it
 * Class WriteCapturer:
     * Has 2 variables you want: `output`, `returned`
 
+* Static Functions that return a WriteCapturer:
     * `stdout_of(func, *args, **kwargs)`:
         Call a function and capture the stdout.
         Returns a `WriteCapturer` object that has the stdout and the return value of calling func.
