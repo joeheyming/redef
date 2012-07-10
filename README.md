@@ -7,7 +7,7 @@ python setup.py build
 python setup.py install
 ```
 
-See [`test_redef.py`](../blob/readme-tweaks/test_redef.py) under your install path for examples.
+See [`test_redef.py`](/blob/master/test_redef.py) under your install path for examples.
 
 Redef is intended to create lexically scoped variables, that when destroyed, undo mock behavior.
 It was inspired by a Perl module, [Test::Resub](http://search.cpan.org/~airwave/Test-Resub-1.02/lib/Test/Resub.pm)
