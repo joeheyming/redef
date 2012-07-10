@@ -11,26 +11,7 @@ setup(name='redef',
       description='Test utility for redefining functions',
       download_url='https://github.com/joeheyming/redef/zipball/master',
       license='GNU GPLv3, Python License',
-      long_description="""
-
-redef was inspired by `Test::Resub
-<http://search.cpan.org/~airwave/Test-Resub-1.02/lib/Test/Resub.pm>`_.
-
-Sometimes you want to mock a bunch of test functions or objects and have the framework cleanup after you are done.  That is the philosophy of Test::Resub and redef.
-
-All you have to do is - ::
-    from redef import redef
-    import unittest
-
-    from mymodule import Myobj
-
-    class MyTest(unittest):
-        def test_something(self):
-            rd_foo = redef(Myobj, 'foo', lambda s: 'bar')
-            assertEquals(Myobj().foo, 'bar')
-
-This example is trivial, but you can do some powerful things when you know the expected inputs of a function that is not behaving in your tests.  All you have to do is redef the bad function and make it return what you want to simulate.
-""",
+      long_description=open('README').read(),
       platforms = 'any',
       py_modules = ['redef'],
       # package_dir =  {'': 'lib'},
