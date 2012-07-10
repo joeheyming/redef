@@ -4,7 +4,7 @@
 from distutils.core import setup
 
 setup(name='redef',
-      version='1.0',
+      version='1.1',
       url='http://github.com/joeheyming/redef',
       maintainer_email='joeheyming@gmail.com',
       maintainer='Joe Heyming',
