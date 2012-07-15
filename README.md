@@ -61,10 +61,10 @@ There are other useful functions provided on the redef object itself:
 
 * Class Redef:
     * `__init__`:
-        takes an object and a key.  The rest of the arguments are kwargs:
-        if the key doesn't exist in the object, an exception will be raised unless you provide kwargs must_exist
-        value: if provided, this value will redefine the key in the object, otherwise you 'wiretap' the object
-        must_call: if provided, when the Redef object is destroyed, it warns if this constraint is violated.
+        * takes an object and a key.  The rest of the arguments are kwargs:
+        * if the key doesn't exist in the object, an exception will be raised unless you provide kwargs must_exist
+        * value: if provided, this value will redefine the key in the object, otherwise you 'wiretap' the object
+        * must_call: if provided, when the Redef object is destroyed, it warns if this constraint is violated.
 
     * `called()`:
         Stores how many times a redef'd function was called.
@@ -102,6 +102,6 @@ For example, you could capture stdout of a function call, and after capturing it
         Call a function and capture the stderr.
         Returns a `CapturedOutput` object that has the stderr and the return value of calling func.
         
-`wiretap`:
-        * A static function that creates a Redef object only for the purpose of capturing the method_args and called values.
-          The original functionality should remain the same.
+* `wiretap`:
+    * A static function that creates a Redef object only for the purpose of capturing the method_args and called values.
+          * The original functionality should remain the same.
