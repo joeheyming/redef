@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import unittest
-from redef import redef, stdout_of
+from redef import redef, stdout_of, stderr_of, wiretap, Redef
 from oktest import ok, test
 
 class Somewhere:
@@ -45,7 +45,7 @@ class RedefTest(unittest.TestCase):
         ok(m.pi) == 3.14
         rd_p = redef(m, 'pi', 3)
         ok(m.pi) == 3
-        ok(rd_p.called()) == 0
+        ok(rd_p.not_called()) == True
         ok(rd_p.method_args()) == None
         ok(rd_p.named_method_args()) == None
         del rd_p
@@ -88,7 +88,7 @@ class RedefTest(unittest.TestCase):
 
         ok(rd_a.called()) == 1
 
-    @test('Test7: multiple calls, capture stdout')
+    @test('Test7: multiple calls, capture stdout, wiretap')
     def _(self):
         class Pirate:
             drunk = 0
@@ -110,21 +110,59 @@ class RedefTest(unittest.TestCase):
                 self.drunk = self.drunk + 1
 
         blackbeard = Pirate()
-        rd_d = redef(Pirate, 'drink', None)
+        wt_d = wiretap(Pirate, 'drink')
         captured = stdout_of(blackbeard.plunder, 'buried treasure')
 
-        ok(rd_d.called()) == 9
+        ok(wt_d.was_called()) == True
+        ok(wt_d.not_called()) == False
+        ok(wt_d.called()) == 9
 
         talk = 'arrr!\n' + 'burp!\n' * 9 + 'yarrr, don\'t touch me buried treasure\n'
-
         ok(captured.output) == talk
         ok(captured.returned) == 'punch'
 
         captured = stdout_of(blackbeard.plunder, 'parrot')
-        ok(rd_d.called()) == 18
+        ok(wt_d.called()) == 18
 
-        rd_d.reset()
-        ok(rd_d.called()) == 0
+        wt_d.reset()
+        ok(wt_d.not_called()) == False
+
+    @test('Test8: redef an attribute that doesn\'t exist')
+    def _(self):
+        class Foo:
+            pass
+        x = Foo()
+        self.assertRaises(Exception, redef, (Foo, 'bar',lambda s: 'BAR!'))
+        self.assertRaises(Exception, redef, (Foo, 'baz', 'baz!'))
+        self.assertRaises(Exception, wiretap, (Foo, 'bar'))
+        self.assertRaises(Exception, wiretap, (Foo, 'baz'))
+
+    @test('Test8: redef an attribute, but the function never is called warns error')
+    def _(self):
+        class Foo:
+            def bar(self):
+                return 'bar'
+        class Delegate:
+            def action(self):
+                f = Foo()
+                return f.bar()
+
+        rd_bar = redef(Foo, 'bar', lambda s: 'baz')
+        ok(rd_bar.not_called()) == True
+        captured = stderr_of(Redef.__del__, rd_bar)
+        ok(captured.output) == 'redef\'d function \'bar\' was not called and should have been called.\n\tMis-called redefs could be due to test crashes unless explicitly tested using Redef kwargs: must_call\n\t./test_redef.py:150: rd_bar = redef(Foo, \'bar\', lambda s: \'baz\')\n'
+
+        wt_bar = wiretap(Foo, 'bar', must_call=False)
+        rd_a = redef(Delegate, 'action', lambda s: 'rainbows!')
+        Delegate().action()
+        ok(wt_bar.not_called()) == True
+        captured = stderr_of(Redef.__del__, wt_bar)
+        ok(captured.output) == ''
+
+        wt_bar2 = wiretap(Foo, 'bar', must_call=False)
+        Foo().bar()
+        captured = stderr_of(Redef.__del__, wt_bar2)
+        ok(captured.output) == 'redef\'d function \'bar\' was called and should not have been called.\n\tMis-called redefs could be due to test crashes unless explicitly tested using Redef kwargs: must_call\n\t./test_redef.py:162: wt_bar2 = wiretap(Foo, \'bar\', must_call=False)\n'
 
 if __name__ == '__main__':
     unittest.main()

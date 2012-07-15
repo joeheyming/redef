@@ -60,6 +60,11 @@ class MyTest(unittest.TestCase):
 There are other useful functions provided on the redef object itself:
 
 * Class Redef:
+    * `__init__`:
+        takes an object and a key.  The rest of the arguments are kwargs:
+        if the key doesn't exist in the object, an exception will be raised unless you provide kwargs must_exist
+        value: if provided, this value will redefine the key in the object, otherwise you 'wiretap' the object
+        must_call: if provided, when the Redef object is destroyed, it warns if this constraint is violated.
 
     * `called()`:
         Stores how many times a redef'd function was called.
@@ -85,15 +90,18 @@ These static functions were provided to show the usefulness of redef:
 For example, you could capture stdout of a function call, and after capturing it,
 `sys.stdout` goes back to normal:
 
-* Class WriteCapturer:
+* Class CapturedOutput:
     * Has 2 variables you want: `output`, `returned`
 
-* Static Functions that return a WriteCapturer:
+* Static Functions that return a CapturedOutput:
     * `stdout_of(func, *args, **kwargs)`:
         Call a function and capture the stdout.
-        Returns a `WriteCapturer` object that has the stdout and the return value of calling func.
+        Returns a `CapturedOutput` object that has the stdout and the return value of calling func.
 
     * `stderr_of(func, *args, **kwargs)`:
         Call a function and capture the stderr.
-        Returns a `WriteCapturer` object that has the stderr and the return value of calling func.
+        Returns a `CapturedOutput` object that has the stderr and the return value of calling func.
         
+`wiretap`:
+        * A static function that creates a Redef object only for the purpose of capturing the method_args and called values.
+          The original functionality should remain the same.
