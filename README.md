@@ -74,6 +74,10 @@ There are other useful functions provided on the redef object itself:
         Stores the most recent `**kwargs` to the redef'd function.
     * `reset()`:
         Sets `called`, `method_args`, and `named_method_args` back to the default state of `0, None, None`
+    * `was_called()`:
+        Asks the redef object if there was ever a call.  Regardless of calling the reset() function
+    * `never_called()`:
+        Asks the redef object if there was never a call. Regardless of calling the reset() function
 
 `Redef` also provides a freebie static function:
 
