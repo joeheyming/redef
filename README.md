@@ -105,3 +105,5 @@ For example, you could capture stdout of a function call, and after capturing it
 * `wiretap`:
     * A static function that creates a Redef object only for the purpose of capturing the method_args and called values.
           * The original functionality should remain the same.
+
+Please ask any questions on github: http://github.com/joeheyming/redef/issues

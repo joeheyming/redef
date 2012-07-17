@@ -164,5 +164,13 @@ class RedefTest(unittest.TestCase):
         captured = stderr_of(Redef.__del__, wt_bar2)
         ok(captured.output) == 'redef\'d function \'bar\' was called and should not have been called.\n\tMis-called redefs could be due to test crashes unless explicitly tested using Redef kwargs: must_call\n\t./test_redef.py:162: wt_bar2 = wiretap(Foo, \'bar\', must_call=False)\n'
 
+    @test('Test8: redef a function on a module')
+    def _(self):
+        import string
+        yummy_str = 'yummy apple' 
+        rd_replace = redef(string, 'replace', lambda s, x, y: 'orange')
+        replaced = string.replace(string, 'apple', 'banana')
+        ok(replaced) == 'orange'
+
 if __name__ == '__main__':
     unittest.main()

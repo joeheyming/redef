@@ -64,7 +64,14 @@ Bad: >>> Redef(SomeClass, "attr", lambda s, x: "something else")
         kwargs can contain the resub\'d value as well as constraints like "must_call", "must_exist"
         '''
         stack = inspect.stack()[2]
-        self.stack = '\t%s:%s: %s' % (stack[1], stack[2], stack[4][0].lstrip())
+
+        if stack is not None:
+            file_name = stack[1]
+            line_num = stack[2]
+            code = ""
+            if stack[4] is not None:
+                code = stack[4][0].lstrip()
+            self.stack = '\t%s:%s: %s' % (file_name, line_num, code)
         self.obj = obj
         self.key = key
         self.must_exist = kwargs.get('must_exist', True)
@@ -92,7 +99,8 @@ Bad: >>> Redef(SomeClass, "attr", lambda s, x: "something else")
 
             if what_happened != '':
                 sys.stderr.write('redef\'d function \'%s\' %s.\n\tMis-called redefs could be due to test crashes unless explicitly tested using Redef kwargs: must_call\n' % (self.key, what_happened))
-                sys.stderr.write(str(self.stack))
+                if self.stack:
+                    sys.stderr.write(str(self.stack))
         setattr(self.obj, self.key, self.old_value)
 
     def called(self):
