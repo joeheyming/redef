@@ -11,23 +11,19 @@ import types
 from cStringIO import StringIO
 class CallableWrapper:
     '''Captures information on a redefined function'''
-    called = 0
     never_called = True
-    method_args = None
-    named_method_args = None
-
     def _capture(self, args, kwargs):
         '''Store the input to the captured function'''
         self.called = self.called + 1
-        self.method_args = args
-        self.named_method_args = kwargs
+        self.method_args.append(args)
+        self.named_method_args.append(kwargs)
         self.never_called = False
 
     def reset(self):
         '''Set the wrapper to a base state where the function was never called'''
         self.called = 0
-        self.method_args = None
-        self.named_method_args = None
+        self.method_args = []
+        self.named_method_args = []
 
     def __init__(self, rd):
         '''Take a Redef object and wrap the function you want to redefine'''
@@ -35,6 +31,7 @@ class CallableWrapper:
         # or else the __del__ function will not work correctly
         is_class_method = not inspect.ismethod(rd.old_value)
         func = rd.value
+	self.reset()
 
         def tocall(*args, **kwargs):
             self._capture(args, kwargs)
@@ -108,11 +105,11 @@ Bad: >>> Redef(SomeClass, "attr", lambda s, x: "something else")
         return self.wrapper.called
 
     def method_args(self):
-        '''ask the wrapper for the most recent non-named args'''
+        '''ask the wrapper for the list of non-named args'''
         return self.wrapper.method_args
 
     def named_method_args(self):
-        '''ask the wrapper for the most recent named args'''
+        '''ask the wrapper for the list of named args'''
         return self.wrapper.named_method_args
 
     def was_called(self):
