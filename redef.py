@@ -124,6 +124,12 @@ Bad: >>> Redef(SomeClass, "attr", lambda s, x: "something else")
         '''ask the wrapper to forget all wrapped information'''
         self.wrapper.reset()
 
+    def __enter__(self):
+        self.wrapper.reset()
+
+    def __exit__(self, type, value, callback):
+        del self
+
 def redef(obj, key, value, **kwargs):
     '''A static constructor helper function'''
     return Redef(obj, key, value=value, **kwargs)
