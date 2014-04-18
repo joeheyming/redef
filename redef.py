@@ -86,19 +86,8 @@ Bad: >>> Redef(SomeClass, "attr", lambda s, x: "something else")
             setattr(self.obj, self.key, self.value)
 
     def __del__(self):
-        '''Can be called explicitly or implied when gone out of scope'''
-        if callable(self.value):
-            what_happened = ''
-            if self.not_called() and self.must_call:
-                what_happened = 'was not called and should have been called'
-            if self.was_called() and not self.must_call:
-                what_happened = 'was called and should not have been called'
-
-            if what_happened != '':
-                sys.stderr.write('redef\'d function \'%s\' %s.\n\tMis-called redefs could be due to test crashes unless explicitly tested using Redef kwargs: must_call\n' % (self.key, what_happened))
-                if self.stack:
-                    sys.stderr.write(str(self.stack))
-        setattr(self.obj, self.key, self.old_value)
+        """Can be called explicitally, but it's encouraged to use a 'with' statement to redefine a function"""
+        self.__exit__(None, None, None);        
 
     def called(self):
         '''ask the wrapper how many times the redef has been called'''
@@ -128,7 +117,18 @@ Bad: >>> Redef(SomeClass, "attr", lambda s, x: "something else")
         self.wrapper.reset()
 
     def __exit__(self, type, value, callback):
-        del self
+        if callable(self.value):
+            what_happened = ''
+            if self.not_called() and self.must_call:
+                what_happened = 'was not called and should have been called'
+            if self.was_called() and not self.must_call:
+                what_happened = 'was called and should not have been called'
+
+            if what_happened != '':
+                sys.stderr.write('redef\'d function \'%s\' %s.\n\tMis-called redefs could be due to test crashes unless explicitly tested using Redef kwargs: must_call\n' % (self.key, what_happened))
+                if self.stack:
+                    sys.stderr.write(str(self.stack))
+        setattr(self.obj, self.key, self.old_value)
 
 def redef(obj, key, value, **kwargs):
     '''A static constructor helper function'''

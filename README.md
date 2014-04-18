@@ -27,8 +27,8 @@ class MyTest(unittest.TestCase):
         myobj = MyClass()
         self.assertEqual(myobj.lame_function(), "something I don't want")
         want = 'something I want'
-        rd_lf = redef(MyClass, 'lame_function', lambda s: want)
-        self.assertEqual(myobj.lame_function(), want)
+	with redef(MyClass, 'lame_function', lambda s: want) as rd_lf:
+	     self.assertEqual(myobj.lame_function(), want)
 
         # after test1, rd_lf gets deleted and resets
 

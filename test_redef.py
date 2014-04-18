@@ -187,6 +187,11 @@ class RedefTest(unittest.TestCase):
             ok(replaced) == 'orange'
         replaced = string.replace(yummy_str, 'apple', 'banana')
         ok(replaced) == 'yummy banana'
-    
+
+        def raise_(x):
+            raise Exception(x)
+        with redef(string, 'replace', lambda s, x, y: raise_('help!')):
+            self.assertRaises(Exception, string.replace, (yummy_str, 'apple', 'banana'))
+            
 if __name__ == '__main__':
     unittest.main()
