@@ -192,6 +192,16 @@ class RedefTest(unittest.TestCase):
             raise Exception(x)
         with redef(string, 'replace', lambda s, x, y: raise_('help!')):
             self.assertRaises(Exception, string.replace, (yummy_str, 'apple', 'banana'))
+    @test('Test11: redef reset with close')
+    def t12(self):
+        class Foo:
+            def bar(self, x):
+                return x * 3
+        rd_foo = redef(Foo, 'bar', lambda s,x: x**3 )
+        x = Foo()
+        ok(x.bar(3)) == 27
+        rd_foo.close()
+        ok(x.bar(3)) == 9
             
 if __name__ == '__main__':
     unittest.main()

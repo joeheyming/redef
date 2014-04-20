@@ -56,7 +56,11 @@ class MyTest(unittest.TestCase):
          # hey, my_global_object is back to being unpredictable
          self.assertEqual(my_global_object.unpredictable, 'unpredictable')
 ```
-         
+ 
+If you don't want to rely on automatic scope you can explicitally call close
+ on your redefed function.  Calling del on the redefed function is the sam
+ as calling close
+        
 There are other useful functions provided on the redef object itself:
 
 * Class Redef:

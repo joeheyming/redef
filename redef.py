@@ -87,7 +87,10 @@ Bad: >>> Redef(SomeClass, "attr", lambda s, x: "something else")
 
     def __del__(self):
         """Can be called explicitally, but it's encouraged to use a 'with' statement to redefine a function"""
-        self.__exit__(None, None, None);        
+        self.close()        
+
+    def __exit__(self, type, value, callback):
+        self.close()
 
     def called(self):
         '''ask the wrapper how many times the redef has been called'''
@@ -116,7 +119,7 @@ Bad: >>> Redef(SomeClass, "attr", lambda s, x: "something else")
     def __enter__(self):
         self.wrapper.reset()
 
-    def __exit__(self, type, value, callback):
+    def close(self):
         if callable(self.value):
             what_happened = ''
             if self.not_called() and self.must_call:
