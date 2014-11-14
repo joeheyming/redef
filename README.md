@@ -115,3 +115,4 @@ For example, you could capture stdout of a function call, and after capturing it
           * The original functionality should remain the same.
 
 Please ask any questions on github: http://github.com/joeheyming/redef/issues
+
