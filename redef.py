@@ -8,7 +8,12 @@ When the test goes out of scope, your redefined attribute goes back to normal be
 import inspect
 import sys
 import types
-from cStringIO import StringIO
+
+try:
+    from cStringIO import StringIO
+except:
+    from io import StringIO
+    
 class CallableWrapper:
     '''Captures information on a redefined function'''
     never_called = True
@@ -31,7 +36,7 @@ class CallableWrapper:
         # or else the __del__ function will not work correctly
         is_class_method = not inspect.ismethod(rd.old_value)
         func = rd.value
-	self.reset()
+        self.reset()
 
         def tocall(*args, **kwargs):
             self._capture(args, kwargs)
