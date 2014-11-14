@@ -1,5 +1,8 @@
 # Redef
 
+[![Build Status](https://secure.travis-ci.org/joeheyming/redef.png)](http://travis-ci.org/joeheyming/redef)
+
+
 To install, just run:
 
 ```bash
