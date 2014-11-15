@@ -43,10 +43,11 @@ class CallableWrapper:
 
             # pop off the redef class variable to keep the
             # faked out function signature the same
-            if is_class_method:
+            try:
+                return func(*args, **kwargs)
+            except:
                 args = args[1:]
-
-            return func(*args, **kwargs)
+                return func(*args, **kwargs)
 
         # @staticmethods need to return a function bound
         #  to the class
@@ -56,7 +57,7 @@ class CallableWrapper:
 
 class Redef(object):
     '''An object that when deleted puts the redefined object back to normal'''
-
+    
     def __init__(self, obj, key, **kwargs):
         '''Make sure you keep the returned Redef object in a variable so that the __del__ function is not called immediately
 
