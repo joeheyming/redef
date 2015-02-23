@@ -6,8 +6,7 @@
 To install, just run:
 
 ```bash
-python setup.py build
-python setup.py install
+pip install redef
 ```
 
 See [`test_redef.py`](/joeheyming/redef/blob/master/test_redef.py) under your install path for examples.
